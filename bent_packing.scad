@@ -142,19 +142,19 @@ module box() {
   
   // 3* wall end pieces
   color("blue")
-  rotate_extrude(angle=-2)
+  rotate_extrude(angle=-3)
     translate([inner_radius+2*voxel_size+shrink,0,0])
       square([wall_thickness-shrink, 3*voxel_size]);
       
   color("blue")
   rotate([0,0,240])
-  rotate_extrude(angle=2)
+  rotate_extrude(angle=3)
     translate([inner_radius+2*voxel_size+shrink,0,0])
       square([wall_thickness-shrink, 1*voxel_size]);
       
   color("blue")
   rotate([0,0,60])
-  rotate_extrude(angle=2)
+  rotate_extrude(angle=3)
     translate([inner_radius+2*voxel_size+shrink,voxel_size,0])
       square([wall_thickness-shrink, 2*voxel_size]);
   
@@ -179,8 +179,8 @@ module box() {
     cylinder(h=bottom_thickness,r=inner_radius+2*voxel_size+wall_thickness);
     piece_true([[2,-0.5,0]]);
     up(bottom_thickness) {
-      text_on_circle(t="bent packing",r=25,rotate=90,extrusion_height=1,size=7.6, font="roboto");
-      text_on_circle(t="Arne Köhn",r=25,rotate=270,extrusion_height=1,size=7.6, font="roboto");
+      text_on_circle(t="bent packing",r=25.7,rotate=90,extrusion_height=2,size=7.7, font="roboto");
+      text_on_circle(t="Arne Köhn",r=25.7,rotate=270,extrusion_height=2,size=7.7, font="roboto");
     }
   }
 
