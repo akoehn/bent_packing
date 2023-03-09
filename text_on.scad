@@ -1,3 +1,13 @@
+/*
+  This library is licensed under the GNU LESSER GENERAL PUBLIC LICENSE Version 2.1
+  Written (as far as I can tell) by Brody Kenrick.
+
+  The upstream repository is here: https://github.com/brodykenrick/text_on_OpenSCAD
+
+  No changes other than this disclaimer were made; I merely include it for easier compilation.
+   -- Arne
+ */
+
 /*  text on ....
     This is a rework of version 3 of write.scad to use the new OpenSCAD internal text() primitive.
     All credit to Harlan Martin (harlan@sutlog.com) for his great effort on the original.
