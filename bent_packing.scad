@@ -179,8 +179,8 @@ module box() {
     cylinder(h=bottom_thickness,r=inner_radius+2*voxel_size+wall_thickness);
     piece_true([[2,-0.5,0]]);
     up(bottom_thickness) {
-      text_on_circle(t="bent packing",r=25.7,rotate=90,extrusion_height=2,size=7.7, font="roboto");
-      text_on_circle(t="Arne Köhn",r=25.7,rotate=270,extrusion_height=2,size=7.7, font="roboto");
+      text_on_circle(t="bent packing",r=26,rotate=90,extrusion_height=2,size=8, font="roboto");
+      text_on_circle(t="Arne Koehn",r=26,rotate=270,extrusion_height=2,size=8, font="roboto");
     }
   }
 
