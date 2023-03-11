@@ -45,7 +45,7 @@ wall_thickness=2.5;
 
 thread_thickness=2;
 
-inner_wall_thickness=1;
+inner_wall_thickness=2;
 
 hex_size=5;
 
@@ -192,7 +192,6 @@ module lid() {
     difference(){
     up(2.5)
       threaded_rod(d=2*(inner_radius - thread_thickness), l=5, pitch=2, internal=false, bevel=true); 
-    cylinder(h=5,r=inner_radius - 2*thread_thickness);
   }
 }
 
