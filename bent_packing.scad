@@ -1,7 +1,7 @@
 /*
  * bent packing
  * by Dr. Arne Köhn <arne@chark.eu>
- * 2022-12-13
+ * 2022-12-13, last updated 2024-11-16 (see changelog below)
  *
  * Goal: make an apparent cylinder. 4 assemblies, one solution.
  *
@@ -23,6 +23,17 @@
  * If you want to, you can play around with the looseness of the
  * thread. print the threadtest with values you want to try and change
  * slop according to what you prefer.
+ *
+ * Changelog
+ *  2024-11-16:
+ *  - optimize thread size for stability (more material on the outer parts)
+ *  - voxel size correctly scales everything (tested with 7mm voxel size)
+ *  - middle is not hollow at the bottom anymore,
+ *    which was an artifact of a donut shape in original plans
+ *  - reduced default shrink to 0.15 to make the pieces not as loose
+ *  - text scales properly (you can even print a 2m puzzle if you want)
+ *  - the hexagons are curved with the box now. Necessary? No, but it prevents
+ *    incorrect renders when you print a 2m puzzle with 2mm wall width ...
  */
 
 // BOSL is supposed to read $slop but I cannot figure
@@ -43,24 +54,24 @@ voxel_size=10;
 bottom_thickness=2;
 wall_thickness=2.5;
 
-thread_thickness=2;
+thread_thickness=4;
 
 inner_wall_thickness=2;
 
-hex_size=5;
+hex_size=(5/10*voxel_size);
 
-shrink=0.2;
+shrink=0.15;
 
 bevel=1;
 
 friction=0.04;
 lid_thickness=2;
+thread_length=6;
 
-torender="lid1";
+// piece to render.
+torender="lid"; // [lid, box, v1, v2, h1, h2, h3, all]
 
 puzzle_radius = inner_radius + 2*voxel_size+wall_thickness;
-
-// hex_depth=0.5*wall_thickness;
 
 module voxel(x,y,z){
   translate([0,0,y*voxel_size])
@@ -99,15 +110,18 @@ module piece_true(voxels) {
 
 module hexagon_hole(radius, x, y, relative_thickness=0.3)
 {
-rotate([0,0,x])
-  translate([0,inner_radius + 2*voxel_size + wall_thickness,y])
-    rotate([90,0,0]){
-    
-      outer_radius = inner_radius + 2*voxel_size + wall_thickness;
-      inner_radius = outer_radius - relative_thickness*wall_thickness;
-      linear_extrude(relative_thickness*wall_thickness, scale=inner_radius/outer_radius)
+   hex_outer_radius = inner_radius + 2*voxel_size + wall_thickness;
+   hex_inner_rad = hex_outer_radius - 1.1*wall_thickness;
+  difference(){
+  rotate([0,0,x])
+    translate([0,inner_radius + 2*voxel_size+wall_thickness,y])
+      rotate([90,0,0]){
+
+        linear_extrude(1.1*wall_thickness, scale=hex_inner_rad/hex_outer_radius)
         circle(r=radius,$fn=6);
     }
+    cylinder(h=3*voxel_size, r=inner_radius + 2*voxel_size + (wall_thickness*(1-relative_thickness)));
+  }
 }
 
 module box() {
@@ -168,19 +182,19 @@ module box() {
   // inner wall
   difference(){
     cylinder(h=3*voxel_size+2*shrink, r=inner_radius);
-    threaded_rod(d=2*(inner_radius - thread_thickness), l=20, pitch=2, $slop=slop, internal=true); 
-    up(10)
-      cylinder(h=3*voxel_size+2*shrink-10, r=inner_radius-inner_wall_thickness);
-  }
+    threaded_rod(d=2*(inner_radius - thread_thickness), l=(1.2*thread_length), pitch=2, $slop=slop, internal=true); 
+   }
   
+  text_radius=(1.5*voxel_size+inner_radius);
+  text_size=(0.8* (voxel_size));
   // top 
   translate([0,0,3*voxel_size+0*shrink])
   difference(){
     cylinder(h=bottom_thickness,r=inner_radius+2*voxel_size+wall_thickness);
     piece_true([[2,-0.5,0]]);
     up(bottom_thickness) {
-      text_on_circle(t="bent packing",r=26,rotate=90,extrusion_height=2,size=8, font="roboto");
-      text_on_circle(t="Arne Koehn",r=26,rotate=270,extrusion_height=2,size=8, font="roboto");
+      text_on_circle(t="bent packing",r=text_radius,rotate=90,extrusion_height=2,size=text_size, font="roboto");
+      text_on_circle(t="Arne Koehn",r=text_radius,rotate=270,extrusion_height=2,size=text_size, font="roboto");
     }
   }
 
@@ -189,10 +203,8 @@ module box() {
 module lid() {
   cylinder(h=lid_thickness,r=inner_radius+2*voxel_size+wall_thickness);
   translate([0,0,lid_thickness])
-    difference(){
-    up(2.5)
-      threaded_rod(d=2*(inner_radius - thread_thickness), l=5, pitch=2, internal=false, bevel=true); 
-  }
+    up(0.5*thread_length)
+      threaded_rod(d=2*(inner_radius - thread_thickness), l=thread_length, pitch=2, internal=false, bevel=true);
 }
 
 module h1() {
@@ -228,7 +240,8 @@ piece([[0,2,0],[0,2,1],
 }
 
 if (torender=="box")
-  box();
+  rotate([0,180,0])
+    box();
 if (torender=="lid")
   lid();
 if (torender=="h1")
@@ -241,6 +254,30 @@ if (torender=="v1")
   v1();
 if (torender=="v2")
   v2();
+
+if (torender=="all") {
+  left(2* (inner_radius + 2*voxel_size + wall_thickness) + 3 )
+    up(3*voxel_size + bottom_thickness)
+      rotate([0,180,0])
+        box();
+  lid();
+  right(7*voxel_size)
+    h1();
+  move([-2*voxel_size, -7*voxel_size])
+    h2();
+  move([7*voxel_size, -3* voxel_size])
+    h3();
+  move([7*voxel_size, -4* voxel_size])
+    rotate([90,0,0])
+      v1();
+  move([4*voxel_size, -4* voxel_size])
+    rotate([90,0,0])
+      v1();
+  move([1*voxel_size, -4* voxel_size])
+    rotate([90,0,0])
+      v2();
+}
+
 
 if (torender=="threadtest") {
   difference(){
@@ -258,4 +295,3 @@ if (torender=="threadtest") {
   right(75) up(3.5)
     threaded_rod(d=2*(inner_radius - thread_thickness), l=7, pitch=2, $slop=0, internal=false, bevel=true);
 }
-
