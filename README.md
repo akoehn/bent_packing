@@ -38,6 +38,11 @@ satisfactory when printed with high infill to add weight. I use 50%.
 ## rendering and making changes
 
 To render the pieces without an interactive openscad session, run:
+```bash
+openscad-nightly -D torender=\"all\" bent_packing.scad -o bent_packing_all.3mf
+```
+
+you can also render the pieces individually:
 
 ```bash
 for p in box lid h1 h2 h3 v1 v2; do
