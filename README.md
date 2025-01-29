@@ -22,6 +22,9 @@ cause if you like the puzzle.
 
 ## printing
 
+If you just want to print the puzzle, you can 
+[download the model files from printables](https://www.printables.com/model/417667-bent-packing).
+
 There are three vertical and three horizontal pieces. The v1 piece
 needs to be printed twice.
 
@@ -39,14 +42,14 @@ satisfactory when printed with high infill to add weight. I use 50%.
 
 To render the pieces without an interactive openscad session, run:
 ```bash
-openscad-nightly -D torender=\"all\" bent_packing.scad -o bent_packing_all.3mf
+openscad-nightly --backend=manifold -D torender=\"all\" bent_packing.scad -o bent_packing_all.3mf
 ```
 
 you can also render the pieces individually:
 
 ```bash
 for p in box lid h1 h2 h3 v1 v2; do
-  openscad-nightly -D torender=\"$p\" bent_packing.scad -o bent_packing_$p.3mf
+  openscad-nightly --backend=manifold -D torender=\"$p\" bent_packing.scad -o bent_packing_$p.3mf
 done
 ```
 
@@ -56,6 +59,8 @@ dimensions of the puzzle.
 You can print the threadtest object if you want to test which `slop`
 value works best for you. It prints three different threads and you
 can change the slop values for them.
+
+`--backend=manifold` is not necessary but cuts rendering time drastically.
 
 ## random things
 

@@ -49,19 +49,24 @@ use <text_on.scad>
 $fn=360;
 
 
+// radius of the center
 inner_radius=10;
+// voxel size in mm going outwards and upwards
 voxel_size=10;
 bottom_thickness=2;
+// outer wall
 wall_thickness=2.5;
 
-thread_thickness=4;
+// thread size of the box. larger value = smaller thread on lid
+thread_thickness=3;
 
-inner_wall_thickness=2;
 
 hex_size=(5/10*voxel_size);
 
+// how much to shrink the pieces. 0.15 is plenty
 shrink=0.15;
 
+// bevel needs to be big for pieces to move well
 bevel=1;
 
 friction=0.04;
@@ -182,7 +187,7 @@ module box() {
   // inner wall
   difference(){
     cylinder(h=3*voxel_size+2*shrink, r=inner_radius);
-    threaded_rod(d=2*(inner_radius - thread_thickness), l=(1.2*thread_length), pitch=2, $slop=slop, internal=true); 
+    threaded_rod(d=2*(inner_radius - thread_thickness), l=(2*thread_length)+0.6, pitch=2, $slop=slop, internal=true); 
    }
   
   text_radius=(1.5*voxel_size+inner_radius);
@@ -202,9 +207,10 @@ module box() {
 
 module lid() {
   cylinder(h=lid_thickness,r=inner_radius+2*voxel_size+wall_thickness);
-  translate([0,0,lid_thickness])
-    up(0.5*thread_length)
-      threaded_rod(d=2*(inner_radius - thread_thickness), l=thread_length, pitch=2, internal=false, bevel=true);
+  // add material to the thread so it extends into the lid
+  real_thread_length = thread_length + lid_thickness - 0.1;
+  up(0.5*real_thread_length+0.1)
+      threaded_rod(d=2*(inner_radius - thread_thickness), l=real_thread_length, pitch=2, internal=false, bevel=true);
 }
 
 module h1() {
