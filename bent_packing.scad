@@ -182,7 +182,8 @@ module box() {
   // inner wall
   difference(){
     cylinder(h=3*voxel_size+2*shrink, r=inner_radius);
-    threaded_rod(d=2*(inner_radius - thread_thickness), l=(1.2*thread_length), pitch=2, $slop=slop, internal=true); 
+    up(lid_thickness)
+      threaded_rod(d=2*(inner_radius - thread_thickness), l=(1.2*thread_length), pitch=2, $slop=slop, internal=true);
    }
   
   text_radius=(1.5*voxel_size+inner_radius);
@@ -203,7 +204,7 @@ module box() {
 module lid() {
   cylinder(h=lid_thickness,r=inner_radius+2*voxel_size+wall_thickness);
   translate([0,0,lid_thickness])
-    up(0.5*thread_length)
+    up(lid_thickness)
       threaded_rod(d=2*(inner_radius - thread_thickness), l=thread_length, pitch=2, internal=false, bevel=true);
 }
 
