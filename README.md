@@ -25,11 +25,11 @@ cause if you like the puzzle.
 If you just want to print the puzzle, you can 
 [download the model files from printables](https://www.printables.com/model/417667-bent-packing).
 
-There are three vertical and three horizontal pieces. The v1 piece
-needs to be printed twice.
+There are three vertical pieces (`v1` needs to be printed twice) and
+three horizontal pieces.
 
 The vertical pieces are best printed on the side (this is obvious for
-v1) so the layers glide more smoothly with the other pieces and the
+`v1`) so the layers glide more smoothly with the other pieces and the
 box.
 
 This puzzle is quite forgiving with tolerances and nozzle sizes, as
@@ -39,6 +39,8 @@ While not needed for a solve, the piece slide is much more
 satisfactory when printed with high infill to add weight. I use 50%.
 
 ## rendering and making changes
+
+This design requires the use of [The Belfry OpenScad Library, v2](https://github.com/BelfrySCAD/BOSL2?tab=readme-ov-file#installation).
 
 To render the pieces without an interactive openscad session, run:
 ```bash
